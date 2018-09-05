@@ -10,18 +10,25 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      messages: [{
-        id: uuid(),
-        username: 'Alice the destroyer of worlds',
-        content: 'testinggg'
-      }],
-      currentUser: {name: 'Alice'},
+      currentUser: {name: "Bob"},
+      messages: [
+        {
+          type: '',
+          username: 'Bob',
+          content: 'Has anyone seen my marbles?'
+        },
+        {
+          type: '',
+          username: 'Anonymous',
+          content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
+        }
+      ],
     }
     this.addMessage = this.addMessage.bind(this);
+    this.changeName = this.changeName.bind(this);
   }
 
   componentDidMount() {
-    console.log("componentDidMount <App />");
     setTimeout(() => {
       console.log("Simulating incoming message");
       const newMessage = { id: uuid(), username: "Michelle", content: "Hello there!" };
@@ -38,6 +45,14 @@ class App extends Component {
     this.setState({messages: newMessages})
   }
 
+  changeName(newName) {
+    const oldName = this.state.currentUser;
+
+    this.setState({currentUser: newName})
+
+    console.log(`${oldName.name} has changed name to ${newName.name}`)
+  }
+
   render() {
     console.log('Rendering <App />')
     return (
@@ -46,7 +61,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages}/>
-        <Chatbar currentUser={this.state.currentUser} addMessage={this.addMessage}/>
+        <Chatbar currentUser={this.state.currentUser} addMessage={this.addMessage} changeName={this.changeName}/>
       </div>
     );
   }

@@ -2,24 +2,32 @@ import React, { Component } from 'react';
 
 class ChatBar extends Component {
   render() {
-    console.log('Rendering <ChatBar />')
-    const onEnter = event => {
+    const submitNewName = event => {
       if (event.key === 'Enter') {  
-        let inputField = event.target;
+        let nameField = event.target;
+        const newName = {name: nameField.value}
+
+        this.props.changeName(newName); 
+      }
+    }
+
+    const submitNewMessage = event => {
+      if (event.key === 'Enter') {  
+        let contentField = event.target;
         const newMessage = {
-          content: inputField.value,
+          content: contentField.value,
           username: this.props.currentUser.name,
         }
 
         this.props.addMessage(newMessage);
-        inputField.value = '';
+        contentField.value = '';
       }
     }
 
     return(
       <footer className="chatbar">
-        <input className="chatbar-username" placeholder={this.props.currentUser.name ? this.props.currentUser.name : 'Your name (optional)'} />
-        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyPress={onEnter}/>
+        <input className="chatbar-username" placeholder={this.props.currentUser.name ? this.props.currentUser.name : 'Your name (optional)'} onKeyPress={submitNewName}/>
+        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyPress={submitNewMessage}/>
       </footer>
     )
   }
