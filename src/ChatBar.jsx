@@ -8,6 +8,7 @@ class ChatBar extends Component {
         const newName = {name: nameField.value}
 
         this.props.changeName(newName); 
+        nameField.value = '';
       }
     }
 
