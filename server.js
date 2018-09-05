@@ -21,7 +21,8 @@
 /******************************************************/
 
 const express = require('express');
-const SocketServer = require('ws').Server;
+// const SocketServer = require('ws').Server;
+const WebSocket = require('ws');
 
 // Set the port to 3001
 const PORT = 3001;
@@ -33,7 +34,7 @@ const server = express()
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${PORT}`));
 
 // Create the WebSockets server
-const wss = new SocketServer({ server });
+const wss = new WebSocket.Server({ server });
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
