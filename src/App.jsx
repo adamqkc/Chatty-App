@@ -5,7 +5,6 @@ import Chatbar from './ChatBar.jsx';
 
 const uuid = require('uuid/v4');
 
-
 class App extends Component {
   constructor() {
     super();
@@ -29,11 +28,17 @@ class App extends Component {
   }
 
   componentDidMount() {
+    const connection = new WebSocket('ws://localhost:3001')
+    this.ws = connection;
+    
+    connection.onopen = function(event) {
+      console.log("Client connected to server!")
+    }
+
     setTimeout(() => {
-      console.log("Simulating incoming message");
       const newMessage = { id: uuid(), username: "Michelle", content: "Hello there!" };
       const messages = this.state.messages.concat(newMessage)
-      console.log(messages);
+
       this.setState({ messages: messages })
     }, 1000);
   }
@@ -43,6 +48,7 @@ class App extends Component {
     const newMessages = [...oldMessages, newMessage];
 
     this.setState({messages: newMessages})
+    this.ws.send(JSON.stringify(newMessage));
   }
 
   changeName(newName) {
@@ -54,7 +60,6 @@ class App extends Component {
   }
 
   render() {
-    console.log('Rendering <App />')
     return (
       <div>
         <nav className="navbar">
