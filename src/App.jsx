@@ -10,18 +10,7 @@ class App extends Component {
     super();
     this.state = {
       currentUser: {name: "Bob"},
-      messages: [
-        {
-          type: '',
-          username: 'Bob',
-          content: 'Has anyone seen my marbles?'
-        },
-        {
-          type: '',
-          username: 'Anonymous',
-          content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-        }
-      ],
+      messages: [],
     }
     this.addMessage = this.addMessage.bind(this);
     this.changeName = this.changeName.bind(this);
