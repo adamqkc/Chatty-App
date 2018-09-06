@@ -3,49 +3,63 @@ import React, { Component } from 'react';
 import MessageList from './MessageList.jsx';
 import Chatbar from './ChatBar.jsx';
 
-const uuid = require('uuid/v4');
-
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentUser: {name: "Bob"},
+      currentUser: {name: 'Bob'},
       messages: [],
     }
-    this.addMessage = this.addMessage.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
     this.changeName = this.changeName.bind(this);
   }
 
   componentDidMount() {
-    const connection = new WebSocket('ws://localhost:3001')
-    this.ws = connection;
+    this.socket = new WebSocket('ws://localhost:3001')
     
-    connection.onopen = function(event) {
-      console.log("Client connected to server!")
+    this.socket.onopen = function() {
+      console.log('Client connected to server!')
+    }
+    
+    this.socket.onmessage = (data) => {
+      const message = JSON.parse(data.data)
+      this.saveMessage(message);
     }
 
     setTimeout(() => {
-      const newMessage = { id: uuid(), username: "Michelle", content: "Hello there!" };
+      const newMessage = {username: 'Michelle', content: 'Hello there!'};
       const messages = this.state.messages.concat(newMessage)
 
       this.setState({ messages: messages })
     }, 1000);
   }
 
-  addMessage(newMessage) {
-    const oldMessages = this.state.messages;
-    const newMessages = [...oldMessages, newMessage];
-
-    this.setState({messages: newMessages})
-    this.ws.send(JSON.stringify(newMessage));
+  sendMessage(event) {
+    if (event.key === 'Enter') {
+      const contentField = event.target;
+      const newMessage = {
+        type: 'message', 
+        username: this.state.currentUser.name,
+        content: contentField.value,
+      }
+      contentField.value = '';
+      this.socket.send(JSON.stringify(newMessage));
+    }
   }
 
-  changeName(newName) {
-    const oldName = this.state.currentUser;
+  saveMessage(message) {
+    const oldMessages = this.state.messages;
+    const newMessages = [...oldMessages, message];
+    this.setState({ messages: newMessages });
+  }
 
-    this.setState({currentUser: newName})
-
-    console.log(`${oldName.name} has changed name to ${newName.name}`)
+  changeName(event) {
+    if (event.key === 'Enter') {
+      let nameField = event.target;
+      const newName = { name: nameField.value }
+      nameField.value = '';
+      this.socket.send(JSON.stringify(newName));
+    }
   }
 
   render() {
@@ -55,7 +69,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages}/>
-        <Chatbar currentUser={this.state.currentUser} addMessage={this.addMessage} changeName={this.changeName}/>
+        <Chatbar currentUser={this.state.currentUser} sendMessage={this.sendMessage} changeName={this.changeName}/>
       </div>
     );
   }
