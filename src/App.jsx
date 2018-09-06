@@ -22,8 +22,7 @@ class App extends Component {
     }
     
     this.socket.onmessage = (data) => {
-      const message = JSON.parse(data.data)
-      this.saveMessage(message);
+      this.saveMessage(data);
     }
 
     setTimeout(() => {
@@ -48,8 +47,9 @@ class App extends Component {
   }
 
   saveMessage(message) {
+    const newMessage = JSON.parse(message.data)
     const oldMessages = this.state.messages;
-    const newMessages = [...oldMessages, message];
+    const newMessages = [...oldMessages, newMessage];
     this.setState({ messages: newMessages });
   }
 
