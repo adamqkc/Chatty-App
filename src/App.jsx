@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import MessageList from './MessageList.jsx';
-import Chatbar from './ChatBar.jsx';
+import ChatBar from './ChatBar.jsx';
 
 class App extends Component {
   constructor() {
@@ -68,8 +68,12 @@ class App extends Component {
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
-        <MessageList messages={this.state.messages}/>
-        <Chatbar currentUser={this.state.currentUser} sendMessage={this.sendMessage} changeName={this.changeName}/>
+        
+        <main className='messages'>
+          <MessageList messages={this.state.messages}/>
+        </main>
+        
+        <ChatBar currentUser={this.state.currentUser} sendMessage={this.sendMessage} changeName={this.changeName}/>
       </div>
     );
   }
