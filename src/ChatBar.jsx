@@ -7,6 +7,7 @@ class ChatBar extends Component {
     this.onEnterNewName = this.onEnterNewName.bind(this);
   }
 
+  // Send new message input data to server
   onEnterNewMessage(event) {
     if (event.key === 'Enter' && event.target.value) {
       const content = event.target.value;
@@ -20,6 +21,7 @@ class ChatBar extends Component {
     }
   }
 
+  // Update current name state and send new notification input data to server
   onEnterNewName(event) {
     if (event.key === 'Enter' && event.target.value) {
       const oldName = this.props.currentUser.name ? this.props.currentUser.name : 'Anonymous';
@@ -27,9 +29,8 @@ class ChatBar extends Component {
       const newNotification = {
         type: 'postNotification',
         content: `${oldName} has changed their name to ${newName}`,
-        oldName: oldName,
-        newName: {name: newName}
       }
+      this.props.updateCurrentUser({name: newName});
       this.props.sendNotification(newNotification);
       event.target.value = '';
     }

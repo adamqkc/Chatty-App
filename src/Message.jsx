@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 
 class Message extends Component {
   render() {
+    // Assign new users 'Anonymous' as default username
     const username = this.props.message.username ? this.props.message.username : 'Anonymous';
+
     return (
       <div>
         <div className="message">
