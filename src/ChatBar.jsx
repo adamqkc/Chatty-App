@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class ChatBar extends Component {
   constructor() {
@@ -53,5 +54,12 @@ class ChatBar extends Component {
     )
   }
 }
+
+ChatBar.propTypes = {
+  currentUser: PropTypes.object,
+  sendNotification: PropTypes.func,
+  updateCurrentUser: PropTypes.func,
+  sendMessage: PropTypes.func
+};
 
 export default ChatBar;

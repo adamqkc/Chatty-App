@@ -49,7 +49,7 @@ class App extends Component {
     }, 1000);
   }
   
-  // Invoked in ChatBar.jsx
+  // Passed into and invoked in ChatBar.jsx
   sendMessage(newMessage) {
     this.socket.send(JSON.stringify(newMessage));
   }
@@ -60,7 +60,7 @@ class App extends Component {
     this.setState({ messages: newMessages });
   }
     
-  // Invoked in ChatBar.jsx
+  // Passed into and invoked in ChatBar.jsx
   sendNotification(newNotification) {
     this.socket.send(JSON.stringify(newNotification));
   }
