@@ -43,7 +43,7 @@ class App extends Component {
     
     // Default message to show newly connected users
     setTimeout(() => {
-      const newMessage = {id: '0', username: 'Chatty-bot', content: 'Hello there! Fill in a name and start messaging!'};
+      const newMessage = {id: '0', username: 'Chatty-bot', content: 'Hello there! Create your username and start messaging!'};
       const messages = this.state.messages.concat(newMessage)
       this.setState({ messages: messages })
     }, 1000);
