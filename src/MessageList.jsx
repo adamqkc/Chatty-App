@@ -7,7 +7,7 @@ class MessageList extends Component {
     const messageList = this.props.messages.map((message) => {
       if (message.notification) {
         return (
-          <div className="notification">
+          <div className="notification" key={message.id}>
             <span className="notification-content">{message.content}</span>
           </div>)
       } else {

@@ -33,7 +33,7 @@ class App extends Component {
     }
     
     setTimeout(() => {
-      const newMessage = {username: 'Michelle', content: 'Hello there!'};
+      const newMessage = {id: '0', username: 'Michelle', content: 'Hello there!'};
       const messages = this.state.messages.concat(newMessage)
       this.setState({ messages: messages })
     }, 1000);
