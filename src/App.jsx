@@ -15,7 +15,7 @@ class App extends Component {
     this.sendNotification = this.sendNotification.bind(this);
   }
 
-
+  // Connect to websocket server
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001')
 
@@ -23,6 +23,7 @@ class App extends Component {
       console.log('Client connected to server!')
     }
 
+    // Update and save state data depending on incoming data type
     this.socket.onmessage = (data) => {
       const incomingData = JSON.parse(data.data)
 
@@ -31,7 +32,7 @@ class App extends Component {
           this.saveMessage(incomingData);
           break;
         case 'incomingNotification':
-          this.saveName(incomingData);
+          this.saveNotification(incomingData);
           break;
         case 'activeUsers':
           this.updateUsers(incomingData.activeUsers);
@@ -39,14 +40,15 @@ class App extends Component {
       }
     }
     
+    // Default message to show newly connected users
     setTimeout(() => {
-      const newMessage = {id: '0', username: 'Michelle', content: 'Hello there!'};
+      const newMessage = {id: '0', username: 'Chatty-bot', content: 'Hello there! Fill in a name and start messaging!'};
       const messages = this.state.messages.concat(newMessage)
       this.setState({ messages: messages })
     }, 1000);
   }
   
-
+  // Invoked in ChatBar.jsx
   sendMessage(newMessage) {
     this.socket.send(JSON.stringify(newMessage));
   }
@@ -57,13 +59,13 @@ class App extends Component {
     this.setState({ messages: newMessages });
   }
     
-    
+  // Invoked in ChatBar.jsx
   sendNotification(newNotification) {
     this.socket.send(JSON.stringify(newNotification));
   }
   
 
-  saveName(newNotification) {
+  saveNotification(newNotification) {
     const newMessages = this.state.messages.concat(newNotification);
     this.setState({
       currentUser: newNotification.newName,
@@ -71,7 +73,7 @@ class App extends Component {
     });
   }
 
-  
+  // 
   updateUsers(activeUsers) {
     this.setState({activeUsers: activeUsers})
   }
