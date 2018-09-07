@@ -1,75 +1,82 @@
 import React, { Component } from 'react';
 
 import MessageList from './MessageList.jsx';
-import Chatbar from './ChatBar.jsx';
+import ChatBar from './ChatBar.jsx';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentUser: {name: 'Bob'},
-      messages: [],
+      currentUser: {},
+      messages: []
     }
     this.sendMessage = this.sendMessage.bind(this);
-    this.changeName = this.changeName.bind(this);
+    this.sendNotification = this.sendNotification.bind(this);
   }
+
 
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001')
-    
+
     this.socket.onopen = function() {
       console.log('Client connected to server!')
     }
-    
-    this.socket.onmessage = (data) => {
-      this.saveMessage(data);
-    }
 
+    this.socket.onmessage = (data) => {
+      const incomingData = JSON.parse(data.data)
+      
+      if (incomingData.type === 'incomingMessage') {
+        this.saveMessage(incomingData);
+      } else if (incomingData.type === 'incomingNotification') {
+        this.saveName(incomingData);
+      }
+    }
+    
     setTimeout(() => {
       const newMessage = {username: 'Michelle', content: 'Hello there!'};
       const messages = this.state.messages.concat(newMessage)
-
       this.setState({ messages: messages })
     }, 1000);
   }
+  
 
-  sendMessage(event) {
-    if (event.key === 'Enter') {
-      const contentField = event.target;
-      const newMessage = {
-        type: 'message', 
-        username: this.state.currentUser.name,
-        content: contentField.value,
-      }
-      contentField.value = '';
-      this.socket.send(JSON.stringify(newMessage));
-    }
+  sendMessage(newMessage) {
+    this.socket.send(JSON.stringify(newMessage));
   }
-
-  saveMessage(message) {
-    const newMessage = JSON.parse(message.data)
-    const oldMessages = this.state.messages;
-    const newMessages = [...oldMessages, newMessage];
+  
+  
+  saveMessage(newMessage) {
+    const newMessages = this.state.messages.concat(newMessage);
     this.setState({ messages: newMessages });
   }
+    
+    
+  sendNotification(newNotification) {
+    this.socket.send(JSON.stringify(newNotification));
+  }
+  
 
-  changeName(event) {
-    if (event.key === 'Enter') {
-      let nameField = event.target;
-      const newName = { name: nameField.value }
-      nameField.value = '';
-      this.socket.send(JSON.stringify(newName));
-    }
+  saveName(newNotification) {
+    const newMessages = this.state.messages.concat(newNotification);
+    this.setState({
+      currentUser: {name: newNotification.newName},
+      messages: newMessages
+    });
   }
 
+  
   render() {
     return (
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
-        <MessageList messages={this.state.messages}/>
-        <Chatbar currentUser={this.state.currentUser} sendMessage={this.sendMessage} changeName={this.changeName}/>
+
+        <main className='messages'>
+          <MessageList messages={this.state.messages} />
+        </main>
+        
+        <ChatBar currentUser={this.state.currentUser} sendMessage={this.sendMessage} sendNotification={this.sendNotification} />
       </div>
     );
   }
