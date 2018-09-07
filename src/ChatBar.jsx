@@ -22,11 +22,13 @@ class ChatBar extends Component {
 
   onEnterNewName(event) {
     if (event.key === 'Enter' && event.target.value) {
-      const oldName = this.props.currentUser.name;
+      const oldName = this.props.currentUser.name ? this.props.currentUser.name : 'Anonymous';
       const newName = event.target.value;
       const newNotification = {
         type: 'postNotification',
-        content: `${oldName} has changed their name to ${newName}`
+        content: `${oldName} has changed their name to ${newName}`,
+        oldName: oldName,
+        newName: newName
       }
       this.props.sendNotification(newNotification);
       event.target.value = '';

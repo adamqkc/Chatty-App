@@ -7,33 +7,30 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentUser: {name: 'Bob'},
-      messages: [{
-        username: 'Bob',
-        content: 'Hi Michelle'
-      }]
+      currentUser: {},
+      messages: []
     }
-    // this.sendMessage = this.sendMessage.bind(this);
-    // this.sendNotification = this.sendNotification.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.sendNotification = this.sendNotification.bind(this);
   }
 
 
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001')
-    
+
     this.socket.onopen = function() {
       console.log('Client connected to server!')
     }
 
-    // this.socket.onmessage = (data) => {
-    //   // const newMessage = JSON.parse(data.data)
-    //   // if (newMessage.type === 'message') {
-    //   //   this.saveMessage(newMessage);
-    //   // } else if (newMessage.type === 'notification') {
-    //   //   this.saveName(newMessage);
-    //   // }
-    // }
-    
+    this.socket.onmessage = (data) => {
+      const incomingData = JSON.parse(data.data)
+      
+      if (incomingData.type === 'incomingMessage') {
+        this.saveMessage(incomingData);
+      } else if (incomingData.type === 'incomingNotification') {
+        this.saveName(incomingData);
+      }
+    }
     
     setTimeout(() => {
       const newMessage = {username: 'Michelle', content: 'Hello there!'};
@@ -44,35 +41,30 @@ class App extends Component {
   
 
   sendMessage(newMessage) {
-    console.log(newMessage)
-    // this.socket.send(JSON.stringify(newMessage));
+    this.socket.send(JSON.stringify(newMessage));
   }
   
   
-  // saveMessage(newMessage) {
-    //   const oldMessages = this.state.messages;
-    //   const newMessages = [...oldMessages, newMessage];
-    //   this.setState({ messages: newMessages });
-    // }
+  saveMessage(newMessage) {
+    const newMessages = this.state.messages.concat(newMessage);
+    this.setState({ messages: newMessages });
+  }
     
     
   sendNotification(newNotification) {
-    console.log(newNotification)
-    // this.socket.send(JSON.stringify(newNotification);
+    this.socket.send(JSON.stringify(newNotification));
   }
   
-  // saveName(newNotification) {
-  //   const oldMessages = this.state.messages;
-  //   const newNotifications = [...oldMessages, newNotification];
-  //   console.log(newNotification.username);
 
-  //   this.setState({ 
-  //     currentUser: newNotification.username,
-  //     messages: newNotifications
-  //   });
-  // }
+  saveName(newNotification) {
+    const newMessages = this.state.messages.concat(newNotification);
+    this.setState({
+      currentUser: {name: newNotification.newName},
+      messages: newMessages
+    });
+  }
 
-
+  
   render() {
     return (
       <div>
