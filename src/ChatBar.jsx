@@ -28,7 +28,7 @@ class ChatBar extends Component {
         type: 'postNotification',
         content: `${oldName} has changed their name to ${newName}`,
         oldName: oldName,
-        newName: newName
+        newName: {name: newName}
       }
       this.props.sendNotification(newNotification);
       event.target.value = '';

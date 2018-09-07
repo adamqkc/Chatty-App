@@ -8,7 +8,8 @@ class App extends Component {
     super();
     this.state = {
       currentUser: {},
-      messages: []
+      messages: [],
+      activeUsers: 0
     }
     this.sendMessage = this.sendMessage.bind(this);
     this.sendNotification = this.sendNotification.bind(this);
@@ -24,11 +25,17 @@ class App extends Component {
 
     this.socket.onmessage = (data) => {
       const incomingData = JSON.parse(data.data)
-      
-      if (incomingData.type === 'incomingMessage') {
-        this.saveMessage(incomingData);
-      } else if (incomingData.type === 'incomingNotification') {
-        this.saveName(incomingData);
+
+      switch (incomingData.type) {
+        case 'incomingMessage':
+          this.saveMessage(incomingData);
+          break;
+        case 'incomingNotification':
+          this.saveName(incomingData);
+          break;
+        case 'activeUsers':
+          this.updateUsers(incomingData.activeUsers);
+          break;
       }
     }
     
@@ -59,17 +66,23 @@ class App extends Component {
   saveName(newNotification) {
     const newMessages = this.state.messages.concat(newNotification);
     this.setState({
-      currentUser: {name: newNotification.newName},
+      currentUser: newNotification.newName,
       messages: newMessages
     });
   }
 
   
+  updateUsers(activeUsers) {
+    this.setState({activeUsers: activeUsers})
+  }
+
+
   render() {
     return (
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <p className='active-users'>Users online: {this.state.activeUsers}</p>
         </nav>
 
         <main className='messages'>

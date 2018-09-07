@@ -5,7 +5,7 @@ import Message from './Message.jsx';
 class MessageList extends Component {
   render() {
     const messageList = this.props.messages.map((message) => {
-      if (message.notification) {
+      if (message.type === 'incomingNotification') {
         return (
           <div className="notification" key={message.id}>
             <span className="notification-content">{message.content}</span>
