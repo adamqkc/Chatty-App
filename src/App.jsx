@@ -36,7 +36,7 @@ class App extends Component {
           this.saveNotification(incomingData);
           break;
         case 'activeUsers':
-          this.updateUsers(incomingData.activeUsers);
+          this.updateUserCount(incomingData.activeUsers);
           break;
       }
     }
@@ -79,7 +79,7 @@ class App extends Component {
   }
 
   // Update and display all active users connected to the server
-  updateUsers(activeUsers) {
+  updateUserCount(activeUsers) {
     this.setState({activeUsers: activeUsers})
   }
 
